@@ -2,13 +2,13 @@
 builds:
   - env:
       - CGO_ENABLED=0
-    main: ./cli/
+    main: ./
     mod_timestamp: '{{ .CommitTimestamp }}'
     ldflags:
       - '-s -w'
-      - -X github.com/drewstinnett/letterboxdctl/cli/cmd.date={{ .CommitTimestamp }}
-      - -X github.com/drewstinnett/letterboxdctl/cli/cmd.version={{ .Tag }}
-      - -X github.com/drewstinnett/letterboxdctl/cli/cmd.commit={{ .ShortCommit }}
+      - -X github.com/drewstinnett/letterboxdctl/cmd.date={{ .CommitTimestamp }}
+      - -X github.com/drewstinnett/letterboxdctl/cmd.version={{ .Tag }}
+      - -X github.com/drewstinnett/letterboxdctl/cmd.commit={{ .ShortCommit }}
     flags:
       - -trimpath
     goos:
@@ -34,11 +34,11 @@ snapshot:
   name_template: "{{ .Tag }}-snapshot"
 changelog:
   skip: true
-# brews:
-# name: 'letterboxdctl'
-# tap:
-#   owner: drewstinnett
-#   name: homebrew-tap
-# description: "API Operations using the Letterboxd website"
-# homepage: "https://github.com/drewstinnett/letterboxdctl"
-# license: BSD-2-Clause
+brews:
+  - name: 'letterboxdctl'
+    tap:
+      owner: drewstinnett
+      name: homebrew-tap
+    description: "Letterboxd CLI Client"
+    homepage: "https://github.com/drewstinnett/letterboxdctl"
+    license: BSD-2-Clause
