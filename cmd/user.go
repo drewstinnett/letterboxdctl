@@ -30,7 +30,7 @@ import (
 
 // userCmd represents the user command
 var userCmd = &cobra.Command{
-	Use:     "user",
+	Use:     "user <username>",
 	Aliases: []string{"u"},
 	Args:    cobra.ExactArgs(1),
 	Short:   "Get user information",
@@ -40,7 +40,8 @@ var userCmd = &cobra.Command{
 		d, err := yaml.Marshal(profile)
 		checkErr(err, "")
 		fmt.Println("---")
-		fmt.Println(string(d))
+		fmt.Print(string(d))
+		stats.Total++
 	},
 }
 

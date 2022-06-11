@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/apex/log v1.9.0
-	github.com/drewstinnett/go-letterboxd v0.1.1
+	github.com/drewstinnett/go-letterboxd v0.1.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.12.0

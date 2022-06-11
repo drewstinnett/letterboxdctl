@@ -30,16 +30,16 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// watchedCmd represents the watched command
-var watchedCmd = &cobra.Command{
-	Use:   "watched <username>",
-	Short: "Show all the watched films for a user",
-	Args:  cobra.ExactArgs(1),
+// listCmd represents the list command
+var listCmd = &cobra.Command{
+	Use:   "list <user> <list-slug>",
+	Short: "Show all the list films for a user",
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		filmC := make(chan *letterboxd.Film)
 		errorC := make(chan error)
 		fmt.Println("---")
-		go client.User.StreamWatched(ctx, args[0], filmC, errorC)
+		go client.User.StreamList(ctx, args[0], args[1], filmC, errorC)
 		for {
 			select {
 
@@ -52,7 +52,7 @@ var watchedCmd = &cobra.Command{
 				stats.Total++
 			case err := <-errorC:
 				if err != nil {
-					log.WithError(err).Error("Error streaming watched")
+					log.WithError(err).Error("Error streaming list")
 				} else {
 					return
 				}
@@ -63,15 +63,15 @@ var watchedCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(watchedCmd)
+	rootCmd.AddCommand(listCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// watchedCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// watchedCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
