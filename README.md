@@ -25,3 +25,27 @@ Check out the help page for full info:
 $ letterboxdctl --help
 ...
 ```
+
+A few examples:
+
+```shell
+❯ letterboxdctl watchlist mondodrew
+...
+- id: "635254"
+  title: Lovers Rock
+  slug: lovers-rock-2020
+  target: /film/lovers-rock-2020/
+  year: 2020
+  externalids:
+    imdb: tt10551102
+    tmdb: "712166"
+- id: "503640"
+  title: New Order
+  slug: new-order-2020
+  target: /film/new-order-2020/
+  year: 2020
+  externalids:
+    imdb: tt12474056
+    tmdb: "575446"
+   • Stats                     duration=3.980591798s total=78
+```
