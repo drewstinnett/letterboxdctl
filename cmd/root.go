@@ -22,29 +22,59 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"time"
+
+	"github.com/apex/log"
+	"github.com/apex/log/handlers/cli"
+	"github.com/drewstinnett/go-letterboxd"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	Verbose bool
+	cfgFile string
+	client  *letterboxd.Client
+	ctx     context.Context
+	start   = time.Now()
+	end     time.Time
+	stats   *RunStats
+)
+
+type RunStats struct {
+	Duration time.Duration
+	Total    int
+}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "letterboxdctl",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Interact with letterboxd.com from the command line",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if Verbose {
+			log.SetLevel(log.DebugLevel)
+		}
+		log.SetHandler(cli.Default)
+
+		client = letterboxd.NewClient(nil)
+		stats = &RunStats{}
+	},
+	PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		end = time.Now()
+		stats.Duration = end.Sub(start)
+		log.WithFields(log.Fields{
+			"duration": stats.Duration,
+			"total":    stats.Total,
+		}).Info("Stats")
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -64,7 +94,7 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "Verbose output")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -87,5 +117,14 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	}
+}
+
+func checkErr(err error, msg string) {
+	if msg != "" {
+		msg = "Fatal error"
+	}
+	if err != nil {
+		log.WithError(err).Fatal(msg)
 	}
 }
