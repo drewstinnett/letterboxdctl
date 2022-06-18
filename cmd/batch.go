@@ -54,6 +54,7 @@ var batchCmd = &cobra.Command{
 			List:      lists,
 			WatchList: watchLists,
 		}
+
 		ctx := context.Background()
 		filmC := make(chan *letterboxd.Film)
 		done := make(chan error)

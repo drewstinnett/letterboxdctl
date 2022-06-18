@@ -64,7 +64,10 @@ var rootCmd = &cobra.Command{
 		}
 		log.SetHandler(cli.Default)
 
-		client = letterboxd.NewClient(nil)
+		config := &letterboxd.ClientConfig{
+			UseCache: true,
+		}
+		client = letterboxd.NewClient(config)
 		stats = &RunStats{}
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
